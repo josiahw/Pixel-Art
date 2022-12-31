@@ -85,6 +85,8 @@ class PixelData(object):
             attrs = {"diagonal": pix0[0] != pix1[0] and pix0[1] != pix1[1]}
             # Set the attributes appropriately
             self.pixel_graph.add_edge(pix0, pix1, **attrs)
+        else:
+            print(pix0,pix1)
 
     def equal(self, pix0, pix1):
         # Returns true if the color value in both pixels is same. Need to change this to have YUV channels.
