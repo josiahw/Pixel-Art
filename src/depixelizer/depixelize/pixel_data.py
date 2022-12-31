@@ -133,7 +133,9 @@ class PixelData(object):
                     # We have an ambiguous pair to resolve.
                     ambiguous_diagonal_pairs.append(edges)
                 else:
-                    assert False, "Unexpected diagonal format"
+                    #assert False, "Unexpected diagonal format"
+                    # TODO: warn - this is a bug in the impl
+                    pass
 
         self.apply_diagonal_heuristics(ambiguous_diagonal_pairs)
 
