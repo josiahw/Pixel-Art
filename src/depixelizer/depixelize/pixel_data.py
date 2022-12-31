@@ -28,6 +28,7 @@ def remove(set_given, element):
 class PixelData(object):
     # The heuristics attribute of the pixeldata class
     HEURISTICS = Heuristics
+    verbose = False
 
     # Initialize with the pixel data
     def __init__(self, pixels):
@@ -40,21 +41,29 @@ class PixelData(object):
     def depixelize(self):
 
         self.create_pixel_graph()
-        print("graph done")
+        if self.verbose:
+            print("graph done")
         self.remove_diagonals()
-        print("removed diagonals")
+        if self.verbose:   
+            print("removed diagonals")
         self.create_grid_graph()
-        print("grid graph done")
+        if self.verbose:
+            print("grid graph done")
         self.deform_grid()
-        print("deformed graph done")
+        if self.verbose:
+            print("deformed graph done")
         self.create_shapes()
-        print("made shapes")
+        if self.verbose:
+            print("made shapes")
         self.get_boundaries()
-        print("Obtained boundaries")
+        if self.verbose:
+            print("Obtained boundaries")
         self.add_shape_boundaries()
-        print("shaped boundaries")
+        if self.verbose:
+            print("shaped boundaries")
         self.smooth_splines()
-        print("smoothed splines")
+        if self.verbose:
+            print("smoothed splines")
 
     def pixel(self, x, y):
         # The pixel data is loaded in the [y][x] format and not the [x][y]. Careful, while coding.
@@ -85,33 +94,12 @@ class PixelData(object):
             attrs = {"diagonal": pix0[0] != pix1[0] and pix0[1] != pix1[1]}
             # Set the attributes appropriately
             self.pixel_graph.add_edge(pix0, pix1, **attrs)
-        else:
-            print(pix0,pix1)
 
     def equal(self, pix0, pix1):
         # Returns true if the color value in both pixels is same. Need to change this to have YUV channels.
         color0 = self.pixel(*pix0)
         color1 = self.pixel(*pix1)
         return color0 == color1
-
-        y0 = 0.299 * color0[0] + 0.587 * color0[1] + 0.114 * color0[2]
-        u0 = 0.492 * (color0[2] - y0)
-        v0 = 0.877 * (color0[0] - y0)
-
-        y1 = 0.299 * color1[0] + 0.587 * color1[1] + 0.114 * color1[2]
-        u1 = 0.492 * (color1[2] - y1)
-        v1 = 0.877 * (color1[0] - y1)
-
-        ydiff = abs(y0 - y1)
-        udiff = abs(u0 - u1)
-        vdiff = abs(v0 - v1)
-
-        if ydiff > 48 or udiff > 7 or vdiff > 6:
-            return False
-        else:
-            return True
-
-        # return self.pixel(*pix0) == self.pixel(*pix1)
 
     def equal1(self, pix0, pix1):
         return self.pixel(*pix0) == self.pixel(*pix1)
@@ -138,10 +126,7 @@ class PixelData(object):
                     # We have an ambiguous pair to resolve.
                     ambiguous_diagonal_pairs.append(edges)
                 else:
-                    print(edges)
-                    #assert False, "Unexpected diagonal format"
-                    # TODO: warn - this is a bug in the impl
-                    pass
+                    assert False, "Unexpected diagonal format"
 
         self.apply_diagonal_heuristics(ambiguous_diagonal_pairs)
 
@@ -255,7 +240,8 @@ class PixelData(object):
             for neighbor in self.pixel_graph.neighbors(pixel):
                 edge = corners & self.pixel_graph.nodes[neighbor]["corners"]
                 if len(edge) != 2:  # If the number of edges is not 2
-                    print(edge)
+                    if self.verbose:
+                        print(edge)
                 # Remove the internal edges in the outlines graph
                 elif self.outlines_graph.has_edge(*edge):
                     self.outlines_graph.remove_edge(*edge)
@@ -288,12 +274,14 @@ class PixelData(object):
 
     def smooth_splines(self):
         # This function iterates through all the paths and tries to smooth each of them.
-        print("Smoothing splines...")
+        if self.verbose:
+            print("Smoothing splines...")
         for i, path in enumerate(self.paths.values()):
-            print(
-                " * %s/%s (%s, %s)..."
-                % (i + 1, len(self.paths), len(path.shapes), len(path.path))
-            )
+            if self.verbose:
+                print(
+                    " * %s/%s (%s, %s)..."
+                    % (i + 1, len(self.paths), len(path.shapes), len(path.path))
+                )
             if len(path.shapes) == 1:
                 path.smooth = path.spline.copy()
                 continue
