@@ -92,6 +92,7 @@ class PixelData(object):
         # Returns true if the color value in both pixels is same. Need to change this to have YUV channels.
         color0 = self.pixel(*pix0)
         color1 = self.pixel(*pix1)
+        return color0 == color1
 
         y0 = 0.299 * color0[0] + 0.587 * color0[1] + 0.114 * color0[2]
         u0 = 0.492 * (color0[2] - y0)
