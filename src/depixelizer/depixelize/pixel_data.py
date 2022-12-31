@@ -70,6 +70,7 @@ class PixelData(object):
         # Add all the nodes and edges between them
         for x, y in coordinates(self.size):
             # Set the corners and connect the edges
+            print(x,y)
             corners = set([(x, y), (x + 1, y), (x, y + 1), (x + 1, y + 1)])
             self.pixel_graph.add_node((x, y), value=self.pixel(x, y), corners=corners)
             self.add_pixel_edge((x, y), (x + 1, y))
