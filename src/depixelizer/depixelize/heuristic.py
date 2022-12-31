@@ -4,8 +4,10 @@ def get_sorted_vertices(edge):
 
 
 # This function checks whether the given coordinates lie inside the image. If it is outside the dimensions of the image, then we return false.
-def check_bounds(coordinate, size):
-    x, y = coordinate
+def check_bounds(coordinate, size, offset=(0, 0)):
+    x, y = map(
+        sum, zip(coordinate, offset)
+    )  # Add the coordinates of the given coordinate to the offset
     width, height = size
     return (
         0 <= x < width and 0 <= y < height
