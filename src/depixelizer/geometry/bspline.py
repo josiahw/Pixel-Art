@@ -149,11 +149,11 @@ class BSpline(object):
     def Curvature(self, u):
         #   Returns the curvature of the spline at a point
         d1 = self.Derivative()(u)
-        d2 = self.Derivative().Derivative()(u)
-        numerator = d1.x * d2.y - d1.y * d2.x
         denominator = sqrt(d1.x**2 + d1.y**2) ** 3
         if denominator == 0:
             return 0
+        d2 = self.Derivative().Derivative()(u)
+        numerator = d1.x * d2.y - d1.y * d2.x
         return abs(numerator / denominator)
 
     def Energy_C(self, index, intervals_per_span):
