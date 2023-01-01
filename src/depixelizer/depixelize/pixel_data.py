@@ -28,7 +28,7 @@ def remove(set_given, element):
 class PixelData(object):
     # The heuristics attribute of the pixeldata class
     HEURISTICS = Heuristics
-    verbose = True
+    verbose = False
 
     # Initialize with the pixel data
     def __init__(self, pixels):
@@ -240,7 +240,7 @@ class PixelData(object):
             for neighbor in self.pixel_graph.neighbors(pixel):
                 edge = corners & self.pixel_graph.nodes[neighbor]["corners"]
                 if len(edge) != 2:  # If the number of edges is not 2
-                    if self.verbose:
+                    if self.verbose or True:
                         print("Edges not 2: ", edge)
                 # Remove the internal edges in the outlines graph
                 elif self.outlines_graph.has_edge(*edge):
